@@ -77,7 +77,7 @@ export default function RegistrationScreen() {
                 placeholder="Login"
                 value={state.login}
                 placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={keyboardHide}
+                onSubmitEditing={handleSubmit}
                 onFocus={() => {
                   handleFocus("login");
                 }}
@@ -95,7 +95,7 @@ export default function RegistrationScreen() {
                 placeholder="Email"
                 value={state.email}
                 placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={keyboardHide}
+                onSubmitEditing={handleSubmit}
                 onFocus={() => {
                   handleFocus("email");
                 }}
@@ -114,7 +114,7 @@ export default function RegistrationScreen() {
                   value={state.password}
                   placeholderTextColor={"#BDBDBD"}
                   secureTextEntry={showPassword}
-                  onSubmitEditing={keyboardHide}
+                  onSubmitEditing={handleSubmit}
                   onFocus={() => {
                     handleFocus("password");
                   }}
