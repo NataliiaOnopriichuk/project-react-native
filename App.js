@@ -25,7 +25,7 @@ export default function App() {
 
   if (!fontsLoaded) {
     return (
-      <ActivityIndicator style={styles.loader} color="#FF6C00" size="large" />
+      <ActivityIndicator style={styles.loader} color="#FF6C00" />
     )
   }
 

@@ -73,7 +73,7 @@ export default function LoginScreen() {
                 placeholder="Email"
                 value={state.email}
                 placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={keyboardHide}
+                onSubmitEditing={handleSubmit}
                 onFocus={() => {
                   handleFocus("email");
                 }}
@@ -92,7 +92,7 @@ export default function LoginScreen() {
                   value={state.password}
                   placeholderTextColor={"#BDBDBD"}
                   secureTextEntry={showPassword}
-                  onSubmitEditing={keyboardHide}
+                  onSubmitEditing={handleSubmit}
                   onFocus={() => {
                     handleFocus("password");
                   }}
