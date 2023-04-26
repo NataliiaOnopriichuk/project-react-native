@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import UserAvatar from "../components/UserAvatar/UserAvatar";
 const BGImage = require("../assets/images/PhotoBG.jpg");
 
 const initialState = {
@@ -43,6 +42,14 @@ export default function LoginScreen() {
     setState(initialState);
   };
 
+  const handleFocus = (name) => {
+    setIsShowKeyboard(true),
+      setBorderInputColor((prev) => ({
+        ...prev,
+        [name]: "#FF6C00",
+      }));
+  };
+
   return (
     <ImageBackground source={BGImage} style={styles.image}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -68,11 +75,7 @@ export default function LoginScreen() {
                 placeholderTextColor={"#BDBDBD"}
                 onSubmitEditing={keyboardHide}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setBorderInputColor((prev) => ({
-                      ...prev,
-                      email: "#FF6C00",
-                    }));
+                  handleFocus("email");
                 }}
                 onBlur={() => setBorderInputColor(initialStateBorder)}
                 onChangeText={(value) =>
@@ -91,11 +94,7 @@ export default function LoginScreen() {
                   secureTextEntry={showPassword}
                   onSubmitEditing={keyboardHide}
                   onFocus={() => {
-                    setIsShowKeyboard(true),
-                      setBorderInputColor((prev) => ({
-                        ...prev,
-                        password: "#FF6C00",
-                      }));
+                    handleFocus("password");
                   }}
                   onBlur={() => setBorderInputColor(initialStateBorder)}
                   onChangeText={(value) =>

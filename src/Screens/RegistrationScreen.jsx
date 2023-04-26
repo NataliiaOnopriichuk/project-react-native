@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ImageBackground,
   Keyboard,
@@ -11,7 +11,6 @@ import {
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import UserAvatar from "../components/UserAvatar/UserAvatar";
-import { useWindowDimensions } from "react-native";
 const BGImage = require("../assets/images/PhotoBG.jpg");
 
 const initialState = {
@@ -31,9 +30,6 @@ export default function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
-  const { height, width } = useWindowDimensions();
-
-  console.log("height :>> ", height);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -49,6 +45,14 @@ export default function RegistrationScreen() {
     setState(initialState);
   };
 
+  const handleFocus = (name) => {
+    setIsShowKeyboard(true),
+      setBorderInputColor((prev) => ({
+        ...prev,
+        [name]: "#FF6C00",
+      }));
+  };
+
   return (
     <ImageBackground source={BGImage} style={styles.image}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -60,7 +64,6 @@ export default function RegistrationScreen() {
               style={{
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 16 : 78,
-                // paddingVertical: height < 450 && 16,
               }}
             >
               <UserAvatar />
@@ -76,11 +79,7 @@ export default function RegistrationScreen() {
                 placeholderTextColor={"#BDBDBD"}
                 onSubmitEditing={keyboardHide}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setBorderInputColor((prev) => ({
-                      ...prev,
-                      login: "#FF6C00",
-                    }));
+                  handleFocus("login");
                 }}
                 onBlur={() => setBorderInputColor(initialStateBorder)}
                 onChangeText={(value) =>
@@ -98,11 +97,7 @@ export default function RegistrationScreen() {
                 placeholderTextColor={"#BDBDBD"}
                 onSubmitEditing={keyboardHide}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setBorderInputColor((prev) => ({
-                      ...prev,
-                      email: "#FF6C00",
-                    }));
+                  handleFocus("email");
                 }}
                 onBlur={() => setBorderInputColor(initialStateBorder)}
                 onChangeText={(value) =>
@@ -121,11 +116,7 @@ export default function RegistrationScreen() {
                   secureTextEntry={showPassword}
                   onSubmitEditing={keyboardHide}
                   onFocus={() => {
-                    setIsShowKeyboard(true),
-                      setBorderInputColor((prev) => ({
-                        ...prev,
-                        password: "#FF6C00",
-                      }));
+                    handleFocus("password");
                   }}
                   onBlur={() => setBorderInputColor(initialStateBorder)}
                   onChangeText={(value) =>
