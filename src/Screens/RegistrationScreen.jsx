@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ImageBackground,
   Keyboard,
@@ -10,12 +10,30 @@ import {
 } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-
+import UserAvatar from "../components/UserAvatar/UserAvatar";
+import { useWindowDimensions } from "react-native";
 const BGImage = require("../assets/images/PhotoBG.jpg");
+
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+};
+
+const initialStateBorder = {
+  login: "#E8E8E8",
+  email: "#E8E8E8",
+  password: "#E8E8E8",
+};
 
 export default function RegistrationScreen() {
   const [showPassword, setShowPassword] = useState(true);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState);
+  const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
+  const { height, width } = useWindowDimensions();
+
+  console.log("height :>> ", height);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -27,6 +45,8 @@ export default function RegistrationScreen() {
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    console.log("state :>> ", state);
+    setState(initialState);
   };
 
   return (
@@ -40,31 +60,77 @@ export default function RegistrationScreen() {
               style={{
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 16 : 78,
+                // paddingVertical: height < 450 && 16,
               }}
             >
+              <UserAvatar />
               <Text style={styles.title}>Registration</Text>
               <TextInput
-                style={{ ...styles.input, marginBottom: 16 }}
+                style={{
+                  ...styles.input,
+                  marginBottom: 16,
+                  borderColor: BorderInputColor.login,
+                }}
                 placeholder="Login"
+                value={state.login}
                 placeholderTextColor={"#BDBDBD"}
                 onSubmitEditing={keyboardHide}
-                onFocus={() => setIsShowKeyboard(true)}
+                onFocus={() => {
+                  setIsShowKeyboard(true),
+                    setBorderInputColor((prev) => ({
+                      ...prev,
+                      login: "#FF6C00",
+                    }));
+                }}
+                onBlur={() => setBorderInputColor(initialStateBorder)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, login: value }))
+                }
               />
               <TextInput
-                style={{ ...styles.input, marginBottom: 16 }}
+                style={{
+                  ...styles.input,
+                  marginBottom: 16,
+                  borderColor: BorderInputColor.email,
+                }}
                 placeholder="Email"
+                value={state.email}
                 placeholderTextColor={"#BDBDBD"}
                 onSubmitEditing={keyboardHide}
-                onFocus={() => setIsShowKeyboard(true)}
+                onFocus={() => {
+                  setIsShowKeyboard(true),
+                    setBorderInputColor((prev) => ({
+                      ...prev,
+                      email: "#FF6C00",
+                    }));
+                }}
+                onBlur={() => setBorderInputColor(initialStateBorder)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
               />
               <View>
                 <TextInput
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: BorderInputColor.password,
+                  }}
                   placeholder="Password"
+                  value={state.password}
                   placeholderTextColor={"#BDBDBD"}
                   secureTextEntry={showPassword}
                   onSubmitEditing={keyboardHide}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onFocus={() => {
+                    setIsShowKeyboard(true),
+                      setBorderInputColor((prev) => ({
+                        ...prev,
+                        password: "#FF6C00",
+                      }));
+                  }}
+                  onBlur={() => setBorderInputColor(initialStateBorder)}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
                 />
                 {showPassword ? (
                   <Icon
@@ -133,6 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
 
     fontSize: 16,
+    fontFamily: "Roboto-Regular",
     lineHeight: 19,
 
     borderWidth: 1,
@@ -144,7 +211,7 @@ const styles = StyleSheet.create({
   title: {
     color: "#212121",
 
-    // fontWeight: "Medium",
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01 * 30,
@@ -175,6 +242,7 @@ const styles = StyleSheet.create({
     marginTop: 27,
   },
   textReg: {
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
@@ -184,6 +252,7 @@ const styles = StyleSheet.create({
   regNav: {
     marginTop: 16,
 
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
