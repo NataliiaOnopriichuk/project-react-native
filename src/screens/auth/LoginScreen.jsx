@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
   ImageBackground,
@@ -10,26 +11,24 @@ import {
 } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import UserAvatar from "../components/UserAvatar/UserAvatar";
-const BGImage = require("../assets/images/PhotoBG.jpg");
+const BGImage = require("../../assets/images/PhotoBG.jpg");
 
 const initialState = {
-  login: "",
   email: "",
   password: "",
 };
 
 const initialStateBorder = {
-  login: "#E8E8E8",
   email: "#E8E8E8",
   password: "#E8E8E8",
 };
 
-export default function RegistrationScreen() {
+export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(true);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
+  const navigation = useNavigation();
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -63,29 +62,10 @@ export default function RegistrationScreen() {
             <View
               style={{
                 ...styles.form,
-                paddingBottom: isShowKeyboard ? 16 : 78,
+                paddingBottom: isShowKeyboard ? 16 : 144,
               }}
             >
-              <UserAvatar />
-              <Text style={styles.title}>Registration</Text>
-              <TextInput
-                style={{
-                  ...styles.input,
-                  marginBottom: 16,
-                  borderColor: BorderInputColor.login,
-                }}
-                placeholder="Login"
-                value={state.login}
-                placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={handleSubmit}
-                onFocus={() => {
-                  handleFocus("login");
-                }}
-                onBlur={() => setBorderInputColor(initialStateBorder)}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, login: value }))
-                }
-              />
+              <Text style={styles.title}>Log in</Text>
               <TextInput
                 style={{
                   ...styles.input,
@@ -146,11 +126,17 @@ export default function RegistrationScreen() {
                     activeOpacity={0.7}
                     onPress={handleSubmit}
                   >
-                    <Text style={styles.textReg}>Sign Up</Text>
+                    <Text style={styles.textReg}>Log in</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity activeOpacity={0.7}>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => navigation.navigate("Registration")}
+                  >
                     <Text style={styles.regNav}>
-                      Already have an account? Log in
+                      Don't have an account?{" "}
+                      <Text style={{ ...styles.regNav, color: "#FF6C00" }}>
+                        Sign up here!
+                      </Text>
                     </Text>
                   </TouchableOpacity>
                 </>
@@ -179,7 +165,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
-    paddingTop: 92,
+    paddingTop: 32,
   },
 
   input: {
@@ -189,8 +175,8 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#F6F6F6",
 
-    fontSize: 16,
     fontFamily: "Roboto-Regular",
+    fontSize: 16,
     lineHeight: 19,
 
     borderWidth: 1,

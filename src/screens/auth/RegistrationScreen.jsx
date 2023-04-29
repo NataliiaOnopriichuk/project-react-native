@@ -10,23 +10,28 @@ import {
 } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-const BGImage = require("../assets/images/PhotoBG.jpg");
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
+const BGImage = require("../../assets/images/PhotoBG.jpg");
+import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
+  login: "",
   email: "",
   password: "",
 };
 
 const initialStateBorder = {
+  login: "#E8E8E8",
   email: "#E8E8E8",
   password: "#E8E8E8",
 };
 
-export default function LoginScreen() {
+export default function RegistrationScreen() {
   const [showPassword, setShowPassword] = useState(true);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
+  const navigation = useNavigation();
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -60,10 +65,29 @@ export default function LoginScreen() {
             <View
               style={{
                 ...styles.form,
-                paddingBottom: isShowKeyboard ? 16 : 144,
+                paddingBottom: isShowKeyboard ? 16 : 78,
               }}
             >
-              <Text style={styles.title}>Log in</Text>
+              <UserAvatar />
+              <Text style={styles.title}>Registration</Text>
+              <TextInput
+                style={{
+                  ...styles.input,
+                  marginBottom: 16,
+                  borderColor: BorderInputColor.login,
+                }}
+                placeholder="Login"
+                value={state.login}
+                placeholderTextColor={"#BDBDBD"}
+                onSubmitEditing={handleSubmit}
+                onFocus={() => {
+                  handleFocus("login");
+                }}
+                onBlur={() => setBorderInputColor(initialStateBorder)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, login: value }))
+                }
+              />
               <TextInput
                 style={{
                   ...styles.input,
@@ -124,11 +148,18 @@ export default function LoginScreen() {
                     activeOpacity={0.7}
                     onPress={handleSubmit}
                   >
-                    <Text style={styles.textReg}>Log in</Text>
+                    <Text style={styles.textReg}>Sign Up</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity activeOpacity={0.7}>
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => navigation.navigate("Login")}
+                  >
                     <Text style={styles.regNav}>
-                      Don't have an account? Sign up here!
+                      Already have an account?{" "}
+                      <Text style={{ ...styles.regNav, color: "#FF6C00" }}>
+                        Log in
+                      </Text>
                     </Text>
                   </TouchableOpacity>
                 </>
@@ -157,7 +188,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
-    paddingTop: 32,
+    paddingTop: 92,
   },
 
   input: {
@@ -167,8 +198,8 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#F6F6F6",
 
-    fontFamily: "Roboto-Regular",
     fontSize: 16,
+    fontFamily: "Roboto-Regular",
     lineHeight: 19,
 
     borderWidth: 1,
