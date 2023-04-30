@@ -1,6 +1,6 @@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PostsIcon from 'react-native-vector-icons/AntDesign';
-import LogOut from 'react-native-vector-icons/Feather';
+import LogOut from '../components/LogOut/LogOut';
 
 
 const postsOptions = () => {
@@ -27,7 +27,7 @@ const postsOptions = () => {
         justifyContent: "center",
         right: 16
       }}>
-        <LogOut name="log-out" color="#BDBDBD" size={24} />
+        <LogOut />
       </TouchableOpacity>
     ),
 

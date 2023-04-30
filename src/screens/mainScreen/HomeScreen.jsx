@@ -4,9 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PostsScreen from "./PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
 import ProfileScreen from "./ProfileScreen";
-import routerOptions from "../../routerOptions";
-
-import ProfileIcon from "react-native-vector-icons/Feather";
+import { routerOptions } from "../../routerOptions";
 
 const HomeTab = createBottomTabNavigator();
 
@@ -34,11 +32,7 @@ export const HomeScreen = () => {
       />
       <HomeTab.Screen
         name="Profile"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <ProfileIcon name="user" color={color} size={24} />
-          ),
-        }}
+        options={{ ...routerOptions.profileOptions() }}
         component={ProfileScreen}
       />
     </HomeTab.Navigator>

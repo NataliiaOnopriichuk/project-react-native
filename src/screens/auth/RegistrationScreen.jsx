@@ -1,17 +1,8 @@
 import { useState } from "react";
-import {
-  ImageBackground,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
-const BGImage = require("../../assets/images/PhotoBG.jpg");
 import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
@@ -35,11 +26,6 @@ export default function RegistrationScreen() {
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-  };
-
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -56,141 +42,111 @@ export default function RegistrationScreen() {
   };
 
   return (
-    <ImageBackground source={BGImage} style={styles.image}>
-      <TouchableWithoutFeedback onPress={keyboardHide}>
-        <View style={styles.container}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "margin"}
+    <UserAvatar
+      isShowKeyboard={isShowKeyboard}
+      setIsShowKeyboard={setIsShowKeyboard}
+    >
+      <Text style={styles.title}>Registration</Text>
+      <TextInput
+        style={{
+          ...styles.input,
+          marginBottom: 16,
+          borderColor: BorderInputColor.login,
+        }}
+        placeholder="Login"
+        value={state.login}
+        placeholderTextColor={"#BDBDBD"}
+        onSubmitEditing={handleSubmit}
+        onFocus={() => {
+          handleFocus("login");
+        }}
+        onBlur={() => setBorderInputColor(initialStateBorder)}
+        onChangeText={(value) =>
+          setState((prevState) => ({ ...prevState, login: value }))
+        }
+      />
+      <TextInput
+        style={{
+          ...styles.input,
+          marginBottom: 16,
+          borderColor: BorderInputColor.email,
+        }}
+        placeholder="Email"
+        value={state.email}
+        placeholderTextColor={"#BDBDBD"}
+        onSubmitEditing={handleSubmit}
+        onFocus={() => {
+          handleFocus("email");
+        }}
+        onBlur={() => setBorderInputColor(initialStateBorder)}
+        onChangeText={(value) =>
+          setState((prevState) => ({ ...prevState, email: value }))
+        }
+      />
+      <View>
+        <TextInput
+          style={{
+            ...styles.input,
+            borderColor: BorderInputColor.password,
+          }}
+          placeholder="Password"
+          value={state.password}
+          placeholderTextColor={"#BDBDBD"}
+          secureTextEntry={showPassword}
+          onSubmitEditing={handleSubmit}
+          onFocus={() => {
+            handleFocus("password");
+          }}
+          onBlur={() => setBorderInputColor(initialStateBorder)}
+          onChangeText={(value) =>
+            setState((prevState) => ({
+              ...prevState,
+              password: value,
+            }))
+          }
+        />
+        {showPassword ? (
+          <Icon
+            style={styles.iconShow}
+            name="eye-off"
+            size={20}
+            onPress={handleShowPassword}
+          />
+        ) : (
+          <Icon
+            style={styles.iconShow}
+            name="eye"
+            size={20}
+            onPress={handleShowPassword}
+          />
+        )}
+      </View>
+      {!isShowKeyboard && (
+        <>
+          <TouchableOpacity
+            style={styles.buttonReg}
+            activeOpacity={0.7}
+            onPress={handleSubmit}
           >
-            <View
-              style={{
-                ...styles.form,
-                paddingBottom: isShowKeyboard ? 16 : 78,
-              }}
-            >
-              <UserAvatar />
-              <Text style={styles.title}>Registration</Text>
-              <TextInput
-                style={{
-                  ...styles.input,
-                  marginBottom: 16,
-                  borderColor: BorderInputColor.login,
-                }}
-                placeholder="Login"
-                value={state.login}
-                placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={handleSubmit}
-                onFocus={() => {
-                  handleFocus("login");
-                }}
-                onBlur={() => setBorderInputColor(initialStateBorder)}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, login: value }))
-                }
-              />
-              <TextInput
-                style={{
-                  ...styles.input,
-                  marginBottom: 16,
-                  borderColor: BorderInputColor.email,
-                }}
-                placeholder="Email"
-                value={state.email}
-                placeholderTextColor={"#BDBDBD"}
-                onSubmitEditing={handleSubmit}
-                onFocus={() => {
-                  handleFocus("email");
-                }}
-                onBlur={() => setBorderInputColor(initialStateBorder)}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, email: value }))
-                }
-              />
-              <View>
-                <TextInput
-                  style={{
-                    ...styles.input,
-                    borderColor: BorderInputColor.password,
-                  }}
-                  placeholder="Password"
-                  value={state.password}
-                  placeholderTextColor={"#BDBDBD"}
-                  secureTextEntry={showPassword}
-                  onSubmitEditing={handleSubmit}
-                  onFocus={() => {
-                    handleFocus("password");
-                  }}
-                  onBlur={() => setBorderInputColor(initialStateBorder)}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, password: value }))
-                  }
-                />
-                {showPassword ? (
-                  <Icon
-                    style={styles.iconShow}
-                    name="eye-off"
-                    size={20}
-                    onPress={handleShowPassword}
-                  />
-                ) : (
-                  <Icon
-                    style={styles.iconShow}
-                    name="eye"
-                    size={20}
-                    onPress={handleShowPassword}
-                  />
-                )}
-              </View>
-              {!isShowKeyboard && (
-                <>
-                  <TouchableOpacity
-                    style={styles.buttonReg}
-                    activeOpacity={0.7}
-                    onPress={handleSubmit}
-                  >
-                    <Text style={styles.textReg}>Sign Up</Text>
-                  </TouchableOpacity>
+            <Text style={styles.textReg}>Sign Up</Text>
+          </TouchableOpacity>
 
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => navigation.navigate("Login")}
-                  >
-                    <Text style={styles.regNav}>
-                      Already have an account?{" "}
-                      <Text style={{ ...styles.regNav, color: "#FF6C00" }}>
-                        Log in
-                      </Text>
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-      </TouchableWithoutFeedback>
-    </ImageBackground>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.regNav}>
+              Already have an account?{" "}
+              <Text style={{ ...styles.regNav, color: "#FF6C00" }}>Log in</Text>
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </UserAvatar>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-    width: "100%",
-  },
-  form: {
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    paddingHorizontal: 16,
-    paddingTop: 92,
-  },
-
   input: {
     height: 50,
 

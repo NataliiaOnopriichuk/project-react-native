@@ -10,8 +10,8 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Text, TextInput, View } from "react-native";
+import { BgnImage } from "../../components/BgnImage/BgnImage";
 import Icon from "react-native-vector-icons/Feather";
-const BGImage = require("../../assets/images/PhotoBG.jpg");
 
 const initialState = {
   email: "",
@@ -53,7 +53,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground source={BGImage} style={styles.image}>
+    <BgnImage>
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <KeyboardAvoidingView
@@ -145,16 +145,11 @@ export default function LoginScreen() {
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
-    </ImageBackground>
+    </BgnImage>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
     justifyContent: "flex-end",

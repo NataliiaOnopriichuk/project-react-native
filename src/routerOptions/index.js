@@ -1,11 +1,13 @@
 import tabOptions from "./tabOptions";
 import postsOptions from "./postsOptions";
 import createPostsOptions from "./createPostsOptions";
+import profileOptions from "./profileOptions";
 
-const routerOptions = {
+export const routerOptions = {
     tabOptions,
     postsOptions,
     createPostsOptions,
+    profileOptions
 };
 
 export default routerOptions;

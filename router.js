@@ -23,7 +23,7 @@ export const useRoute = (isAuth) => {
         <MainTab.Navigator>
             <MainTab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
             <MainTab.Screen options={{ headerShown: false }} name="Map" component={MapScreen} />
-            <MainTab.Screen options={{ headerShown: false }} name="Comment" component={CommentsScreen} />
+            <MainTab.Screen options={{ headerShown: false }} name="Comments" component={CommentsScreen} />
         </MainTab.Navigator>
     );
 }
