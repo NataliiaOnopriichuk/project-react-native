@@ -1,4 +1,5 @@
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -9,9 +10,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MapIcon from "react-native-vector-icons/EvilIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
   title: "",
@@ -25,8 +31,18 @@ const initialStateBorder = {
 
 export default function CreatePostsScreen() {
   const [state, setState] = useState(initialState);
-  const [_, setIsShowKeyboard] = useState(false);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
+  const navigation = useNavigation();
+
+  //Camera
+  const [cameraIsOpen, setCameraIsOpen] = useState(false);
+  const [camera, setCamera] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  const [, setHasPermission] = useState(null);
+
+  // Location
+  const [location, setLocation] = useState(null);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -41,14 +57,66 @@ export default function CreatePostsScreen() {
       }));
   };
 
+  const resetForm = () => {
+    setState(initialState);
+    setPhoto(null);
+  };
+
+  const onCameraToggle = () => {
+    setCameraIsOpen(!cameraIsOpen);
+  };
+
+  const takePhoto = async () => {
+    const photo = await camera.takePictureAsync();
+    setPhoto(photo.uri);
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resCamera = await Camera.requestCameraPermissionsAsync();
+        const resMedia = await MediaLibrary.requestPermissionsAsync();
+        const resLocation = await Location.requestForegroundPermissionsAsync();
+
+        const statusCamera = resCamera.status;
+        const statusMedia = resMedia.status;
+        const statusLocation = resLocation.status;
+
+        setHasPermission(
+          statusCamera === "granted" &&
+            statusMedia === "granted" &&
+            statusLocation === "granted"
+        );
+
+        const location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [cameraIsOpen]);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    }
+  };
+
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log("state :>> ", state);
-    setState(initialState);
-  };
-
-  const resetForm = () => {
+    navigation.navigate("Posts", {
+      photoUrl: photo,
+      ...state,
+      location: location?.coords,
+    });
+    resetForm();
     setState(initialState);
   };
 
@@ -58,12 +126,81 @@ export default function CreatePostsScreen() {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <View style={styles.cameraWrapper}>
-            <View style={styles.cameraIcon}>
-              <Icon name="camera" color="#BDBDBD" size={24} />
-            </View>
-          </View>
-          <Text style={styles.loadPhotoText}>Load photo</Text>
+          {!cameraIsOpen ? (
+            <>
+              <View style={styles.cameraWrapper}>
+                {photo && (
+                  <View style={styles.takePhoto}>
+                    <Image
+                      source={{ uri: photo }}
+                      style={{ width: 343, height: 240, borderRadius: 8 }}
+                    />
+                  </View>
+                )}
+                <TouchableOpacity
+                  style={{
+                    ...styles.cameraIcon,
+                    backgroundColor: "#fff",
+                  }}
+                  onPress={onCameraToggle}
+                >
+                  <Icon name="camera" color="#BDBDBD" size={24} />
+                </TouchableOpacity>
+              </View>
+              {photo ? (
+                <Text
+                  style={{
+                    ...styles.loadPhotoText,
+                    display: isShowKeyboard ? "none" : "flex",
+                  }}
+                  onPress={pickImage}
+                >
+                  Edit photo
+                </Text>
+              ) : (
+                <Text style={styles.loadPhotoText} onPress={pickImage}>
+                  Load photo
+                </Text>
+              )}
+            </>
+          ) : (
+            <>
+              <Camera style={styles.openCamera} ref={setCamera}>
+                {photo && (
+                  <View style={styles.takePhoto}>
+                    <Image
+                      source={{ uri: photo }}
+                      style={{ width: 343, height: 240, borderRadius: 8 }}
+                    />
+                  </View>
+                )}
+                <TouchableOpacity
+                  style={{
+                    ...styles.cameraIcon,
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                  }}
+                  onPress={takePhoto}
+                >
+                  <Icon name="camera" color="#FFFFFF" size={24} />
+                </TouchableOpacity>
+              </Camera>
+              {photo ? (
+                <Text
+                  style={{
+                    ...styles.loadPhotoText,
+                    display: isShowKeyboard ? "none" : "flex",
+                  }}
+                  onPress={pickImage}
+                >
+                  Edit photo
+                </Text>
+              ) : (
+                <Text style={styles.loadPhotoText} onPress={pickImage}>
+                  Load photo
+                </Text>
+              )}
+            </>
+          )}
 
           <TextInput
             placeholder="Title..."
@@ -109,11 +246,15 @@ export default function CreatePostsScreen() {
           <TouchableOpacity
             style={{
               ...styles.button,
-              backgroundColor: "#F6F6F6",
+              backgroundColor: photo ? "#FF6C00" : "#F6F6F6",
             }}
             onPress={handleSubmit}
           >
-            <Text style={{ ...styles.btnText, color: "#BDBDBD" }}>Publish</Text>
+            <Text
+              style={{ ...styles.btnText, color: photo ? "#FFF" : "#BDBDBD" }}
+            >
+              Publish
+            </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
         <View
@@ -157,13 +298,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
   },
+  openCamera: {
+    height: 240,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 8,
+  },
   cameraIcon: {
     width: 60,
     height: 60,
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
   },
   cameraBtn: {
     alignItems: "center",
@@ -178,14 +326,6 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
     fontSize: 16,
     marginBottom: 32,
-  },
-  openCamera: {
-    height: 240,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    borderRadius: 8,
   },
   takePhoto: {
     position: "absolute",
@@ -226,5 +366,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 70,
     height: 40,
+  },
+  openCamera: {
+    height: 240,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 8,
+  },
+  takePhoto: {
+    position: "absolute",
+  },
+  loadPhotoText: {
+    marginTop: 8,
+    color: "#BDBDBD",
+    fontSize: 16,
+    marginBottom: 32,
   },
 });

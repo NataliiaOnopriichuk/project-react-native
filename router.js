@@ -5,6 +5,7 @@ import LoginScreen from './src/screens/auth/LoginScreen';
 import { HomeScreen } from "./src/screens/mainScreen/HomeScreen";
 import MapScreen from "./src/screens/nestedScreens/MapScreen";
 import CommentsScreen from "./src/screens/nestedScreens/CommentsScreen";
+import routerOptions from "./src/routerOptions";
 
 
 const AuthStack = createStackNavigator();
@@ -22,7 +23,9 @@ export const useRoute = (isAuth) => {
     return (
         <MainTab.Navigator>
             <MainTab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
-            <MainTab.Screen options={{ headerShown: false }} name="Map" component={MapScreen} />
+            <MainTab.Screen options={() => ({
+                ...routerOptions.mapOptions(),
+            })} name="Map" component={MapScreen} />
             <MainTab.Screen options={{ headerShown: false }} name="Comments" component={CommentsScreen} />
         </MainTab.Navigator>
     );

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import PostsList from "../../components/PostsList/PostsList";
 
-export default function PostsScreen() {
+export default function PostsScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>
@@ -12,6 +12,7 @@ export default function PostsScreen() {
           <Text style={styles.userEmail}>email</Text>
         </View>
       </View>
+      <PostsList route={route} type="PostsScreen" />
     </View>
   );
 }
