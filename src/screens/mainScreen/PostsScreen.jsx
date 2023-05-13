@@ -1,15 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import PostsList from "../../components/PostsList/PostsList";
+import { useSelector } from "react-redux";
+import { authSelectors } from "../../redux/auth/authSelectors";
 
 export default function PostsScreen({ route }) {
+  const { userName, userAvatar, userEmail } = useSelector(
+    authSelectors.getUser
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>
-        {/* <Image source={} /> */}
-        <View style={styles.userPhoto}></View>
+        <Image source={{ uri: userAvatar }} style={styles.userPhoto} />
+        {/* <View style={styles.userPhoto}></View> */}
         <View>
-          <Text style={styles.userName}>login</Text>
-          <Text style={styles.userEmail}>email</Text>
+          <Text style={styles.userName}>{userName}</Text>
+          <Text style={styles.userEmail}>{userEmail}</Text>
         </View>
       </View>
       <PostsList route={route} type="PostsScreen" />

@@ -1,4 +1,5 @@
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -9,18 +10,35 @@ import {
 import { View } from "react-native";
 import { BgnImage } from "../../components/BgnImage/BgnImage";
 import Icon from "react-native-vector-icons/AntDesign";
+import * as ImagePicker from "expo-image-picker";
 
 export const UserAvatar = ({
   children,
   isShowKeyboard,
   setIsShowKeyboard,
   type,
+  avatar,
+  setAvatar,
 }) => {
-  //тимчасова конст, мають мінятися іконки в залежності чи є фото
-  const isPhoto = false;
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+  };
+
+  const addAvatar = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setAvatar(result.assets[0].uri);
+    }
+  };
+
+  const deleteAvatar = () => {
+    setAvatar(null);
   };
 
   return (
@@ -38,11 +56,20 @@ export const UserAvatar = ({
               }}
             >
               <View style={styles.imageWrapper}>
-                <TouchableOpacity style={styles.addIcon}>
-                  {!isPhoto && (
+                {avatar && (
+                  <Image
+                    source={{ uri: avatar }}
+                    style={{ width: "100%", height: "100%", borderRadius: 16 }}
+                  />
+                )}
+                <TouchableOpacity
+                  style={styles.addIcon}
+                  onPress={avatar ? deleteAvatar : addAvatar}
+                >
+                  {!avatar && (
                     <Icon name="pluscircleo" color="#FF6C00" size={25} />
                   )}
-                  {isPhoto && (
+                  {avatar && (
                     <Icon name="closecircleo" color="#E8E8E8" size={25} />
                   )}
                 </TouchableOpacity>

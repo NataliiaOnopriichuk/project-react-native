@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import { useDispatch } from "react-redux";
 import PostsScreen from "./PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -9,6 +9,8 @@ import { routerOptions } from "../../routerOptions";
 const HomeTab = createBottomTabNavigator();
 
 export const HomeScreen = () => {
+  const dispatch = useDispatch();
+
   return (
     <HomeTab.Navigator
       initialRouteName="Posts"
@@ -19,7 +21,7 @@ export const HomeScreen = () => {
       <HomeTab.Screen
         name="Posts"
         options={() => ({
-          ...routerOptions.postsOptions(),
+          ...routerOptions.postsOptions(dispatch),
         })}
         component={PostsScreen}
       />

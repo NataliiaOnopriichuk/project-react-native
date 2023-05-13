@@ -6,12 +6,16 @@ import { HomeScreen } from "./src/screens/mainScreen/HomeScreen";
 import MapScreen from "./src/screens/nestedScreens/MapScreen";
 import CommentsScreen from "./src/screens/nestedScreens/CommentsScreen";
 import routerOptions from "./src/routerOptions";
+import { useSelector } from "react-redux";
+import { authSelectors } from "./src/redux/auth/authSelectors";
 
 
 const AuthStack = createStackNavigator();
 const MainTab = createStackNavigator();
 
-export const useRoute = (isAuth) => {
+export const useRoute = () => {
+    const isAuth = useSelector(authSelectors.getIsAuth);
+
     if (!isAuth) {
         return (
             <AuthStack.Navigator initialRouteName="Login">

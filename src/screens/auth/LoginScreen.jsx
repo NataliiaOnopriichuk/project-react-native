@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
-  ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -12,6 +12,7 @@ import {
 import { Text, TextInput, View } from "react-native";
 import { BgnImage } from "../../components/BgnImage/BgnImage";
 import Icon from "react-native-vector-icons/Feather";
+import { authLogin } from "../../redux/auth/authOperation";
 
 const initialState = {
   email: "",
@@ -30,6 +31,8 @@ export default function LoginScreen() {
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
   const navigation = useNavigation();
 
+  const dispatch = useDispatch();
+
   const handleShowPassword = () => setShowPassword(!showPassword);
 
   const keyboardHide = () => {
@@ -40,7 +43,7 @@ export default function LoginScreen() {
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log("state :>> ", state);
+    dispatch(authLogin(state));
     setState(initialState);
   };
 

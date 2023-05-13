@@ -3,7 +3,9 @@ import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import { authRegister } from "../../redux/auth/authOperation";
 
 const initialState = {
   login: "",
@@ -21,15 +23,17 @@ export default function RegistrationScreen() {
   const [showPassword, setShowPassword] = useState(true);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const [avatar, setAvatar] = useState(null);
   const [BorderInputColor, setBorderInputColor] = useState(initialStateBorder);
   const navigation = useNavigation();
 
   const handleShowPassword = () => setShowPassword(!showPassword);
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log("state :>> ", state);
+    dispatch(authRegister({ ...state, avatar }));
     setState(initialState);
   };
 
@@ -45,6 +49,9 @@ export default function RegistrationScreen() {
     <UserAvatar
       isShowKeyboard={isShowKeyboard}
       setIsShowKeyboard={setIsShowKeyboard}
+      avatar={avatar}
+      setAvatar={setAvatar}
+      type="RegistrationScreen"
     >
       <Text style={styles.title}>Registration</Text>
       <TextInput

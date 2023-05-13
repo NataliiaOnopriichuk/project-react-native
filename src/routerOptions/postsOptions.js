@@ -1,9 +1,10 @@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PostsIcon from 'react-native-vector-icons/AntDesign';
 import LogOut from '../components/LogOut/LogOut';
+import { authLogout } from '../redux/auth/authOperation';
 
 
-const postsOptions = () => {
+const postsOptions = (dispatch) => {
   return {
     // Header
     title: "Posts",
@@ -26,7 +27,7 @@ const postsOptions = () => {
         alignItems: "center",
         justifyContent: "center",
         right: 16
-      }}>
+      }} onPress={() => dispatch(authLogout())}>
         <LogOut />
       </TouchableOpacity>
     ),
